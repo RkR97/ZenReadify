@@ -1,0 +1,22 @@
+.nav-pills .nav-link {
+    color: #495057;
+    border-radius: 0;
+    border-bottom: 2px solid transparent;
+}
+.nav-pills .nav-link.active, .nav-pills .show>.nav-link {
+    color: #4f46e5;
+    background-color: transparent;
+    border-bottom: 2px solid #4f46e5;
+}
+.sticky-md-top {
+    position: sticky;
+    top: 2rem;
+    z-index: 1020;
+}
+.fade-in {
+    animation: fadeIn 0.3s ease-in;
+}
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}

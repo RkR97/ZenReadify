@@ -1,0 +1,111 @@
+<!-- Hero Section -->
+<div class="row mb-5">
+  <div class="col-12 text-center py-5 rounded-4 shadow-sm" style="background: linear-gradient(135deg, #1a1a2e 0%, #4f46e5 100%);">
+    <h1 class="display-4 fw-bolder text-white mb-3">Discover Your Next Great Read</h1>
+    <p class="lead text-white-50 mb-4">Explore thousands of books across all genres.</p>
+
+    <div class="row justify-content-center">
+      <div class="col-md-8 col-lg-6">
+        <div class="input-group input-group-lg shadow-sm">
+          <input type="text"
+                 class="form-control border-0"
+                 placeholder="Search by title or author..."
+                 [(ngModel)]="searchInput"
+                 (keyup.enter)="onSearch()">
+          <button class="btn btn-light text-primary px-4 fw-bold" type="button" (click)="onSearch()">
+            Search
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <!-- Sidebar Filters -->
+  <div class="col-md-3 mb-4">
+    <div class="card shadow-sm sticky-md-top">
+      <div class="card-body">
+        <h5 class="card-title fw-bold mb-3 border-bottom pb-2">Genres</h5>
+        <div class="form-check mb-2" *ngFor="let genre of genres">
+          <input class="form-check-input"
+                 type="radio"
+                 name="genreFilter"
+                 [id]="'genre-' + genre"
+                 [value]="genre"
+                 [checked]="selectedGenre() === genre"
+                 (change)="onFilterChange(genre)">
+          <label class="form-check-label" [for]="'genre-' + genre">
+            {{genre}}
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="col-md-9">
+
+    <!-- Filtered / Search Results View -->
+    <ng-container *ngIf="isSearching()">
+      <h3 class="fw-bold mb-4">
+        {{ searchQuery() ? 'Search Results for "' + searchQuery() + '"' : 'Books in ' + selectedGenre() }}
+        <span class="text-muted fs-5">({{books().length}})</span>
+      </h3>
+      <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-4">
+        <div class="col" *ngFor="let book of books()">
+          <app-book-card [book]="book"></app-book-card>
+        </div>
+        <div class="col-12 text-center py-5" *ngIf="books().length === 0">
+          <h4 class="text-muted">No books found matching your criteria.</h4>
+        </div>
+      </div>
+    </ng-container>
+
+    <!-- Default Category View -->
+    <ng-container *ngIf="!isSearching()">
+
+      <div class="mb-5" *ngIf="hasBestSellers()">
+        <h3 class="fw-bold mb-4 d-flex align-items-center">
+          <span class="text-warning me-2">🏆</span> Best Sellers
+        </h3>
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-4">
+          <div class="col" *ngFor="let book of categories()['Best Sellers']">
+            <app-book-card [book]="book"></app-book-card>
+          </div>
+        </div>
+      </div>
+
+      <div class="mb-5" *ngIf="hasEditorsPicks()">
+        <h3 class="fw-bold mb-4 d-flex align-items-center">
+          <span class="text-primary me-2">⭐</span> Editor's Picks
+        </h3>
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-4">
+          <div class="col" *ngFor="let book of editorsPicks">
+            <app-book-card [book]="book"></app-book-card>
+          </div>
+        </div>
+      </div>
+
+      <div class="mb-5" *ngIf="hasNewArrivals()">
+        <h3 class="fw-bold mb-4 d-flex align-items-center">
+          <span class="text-success me-2">🆕</span> New Arrivals
+        </h3>
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-4">
+          <div class="col" *ngFor="let book of categories()['New Arrivals']">
+            <app-book-card [book]="book"></app-book-card>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="!hasBestSellers() && !hasEditorsPicks() && !hasNewArrivals()" class="text-center py-5">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+        <p class="text-muted mt-3">Loading books...</p>
+      </div>
+
+    </ng-container>
+
+  </div>
+</div>

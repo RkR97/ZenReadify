@@ -1,0 +1,111 @@
+<div class="row" *ngIf="book">
+  <div class="col-md-4 mb-4">
+    <div class="card shadow-sm border-0 sticky-md-top" style="top: 2rem;">
+      <img [src]="book.imageUrl || 'https://via.placeholder.com/400x600?text=No+Cover'" 
+           class="card-img-top p-3 rounded-4" 
+           alt="{{book.title}}"
+           style="object-fit: contain; max-height: 500px;">
+    </div>
+  </div>
+
+  <div class="col-md-8">
+    <div class="d-flex justify-content-between align-items-start mb-2">
+      <h1 class="display-5 fw-bold mb-0">{{book.title}}</h1>
+      <span class="badge bg-primary fs-6 py-2 px-3 shadow-sm rounded-pill">{{book.genre}}</span>
+    </div>
+    
+    <h4 class="text-muted mb-4 border-bottom pb-3">by {{book.author}}</h4>
+    
+    <div class="mb-4">
+      <span class="fs-5 fw-bold text-success me-3">{{book.price | currency}}</span>
+      <span *ngIf="book.category !== 'Standard'" class="badge bg-danger bg-opacity-10 text-danger border border-danger-subtle">
+        ✨ {{book.category}}
+      </span>
+    </div>
+
+    <ul class="nav nav-pills mb-4 border-bottom pb-2">
+      <li class="nav-item">
+        <button class="nav-link fs-5 fw-medium" 
+                [class.active]="activeTab === 'description'"
+                (click)="activeTab = 'description'">
+          Description
+        </button>
+      </li>
+      <li class="nav-item">
+        <button class="nav-link fs-5 fw-medium" 
+                [class.active]="activeTab === 'reviews'"
+                (click)="activeTab = 'reviews'">
+          Customer Reviews ({{reviews.length}})
+        </button>
+      </li>
+    </ul>
+
+    <div *ngIf="activeTab === 'description'" class="fade-in">
+      <p class="fs-5 text-secondary lh-lg">{{book.description}}</p>
+      
+      <div class="mt-5 p-4 bg-light rounded-4">
+        <h5 class="fw-bold mb-3">Product Details</h5>
+        <div class="row">
+          <div class="col-sm-6 mb-2"><span class="text-muted">Publisher:</span> {{book.publisher || 'N/A'}}</div>
+          <div class="col-sm-6 mb-2"><span class="text-muted">Publication Date:</span> {{book.publishedDate | date:'mediumDate'} || 'N/A'}</div>
+          <div class="col-sm-6 mb-2"><span class="text-muted">Pages:</span> {{book.pages || 'N/A'}}</div>
+          <div class="col-sm-6 mb-2"><span class="text-muted">ISBN:</span> {{book.isbn || 'N/A'}}</div>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="activeTab === 'reviews'" class="fade-in">
+      <div class="card shadow-sm border-0 mb-5 bg-light">
+        <div class="card-body p-4">
+          <h5 class="fw-bold mb-4">Write a Review</h5>
+          <form (ngSubmit)="submitReview()">
+            <div class="mb-3">
+              <label class="form-label fw-medium">Your Name</label>
+              <input type="text" class="form-control" [(ngModel)]="newReview.user" name="user" required placeholder="John Doe">
+            </div>
+            
+            <div class="mb-3">
+              <label class="form-label fw-medium">Rating</label>
+              <select class="form-select w-auto" [(ngModel)]="newReview.rating" name="rating">
+                <option [value]="5">⭐⭐⭐⭐⭐ (5/5)</option>
+                <option [value]="4">⭐⭐⭐⭐ (4/5)</option>
+                <option [value]="3">⭐⭐⭐ (3/5)</option>
+                <option [value]="2">⭐⭐ (2/5)</option>
+                <option [value]="1">⭐ (1/5)</option>
+              </select>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label fw-medium">Your Review</label>
+              <textarea class="form-control" rows="3" [(ngModel)]="newReview.comment" name="comment" required placeholder="What did you think of this book?"></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-primary px-4 py-2 fw-bold" [disabled]="!newReview.user || !newReview.comment">
+              Submit Review
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <div *ngIf="reviews.length === 0" class="text-center py-5 rounded-4 border bg-light">
+        <h5 class="text-muted">No reviews yet. Be the first to review this book!</h5>
+      </div>
+      
+      <div class="card shadow-sm border-0 mb-3" *ngFor="let review of reviews">
+        <div class="card-body p-4">
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <h6 class="fw-bold mb-0">{{review.user}}</h6>
+            <div class="text-warning">
+              <span *ngFor="let s of [1,2,3,4,5]">
+                 <span *ngIf="s <= review.rating">★</span><span *ngIf="s > review.rating" class="text-muted">☆</span>
+              </span>
+            </div>
+          </div>
+          <small class="text-muted d-block mb-3">{{review.createdAt | date:'mediumDate'}}</small>
+          <p class="mb-0 text-secondary">{{review.comment}}</p>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+</div>

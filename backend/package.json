@@ -1,0 +1,17 @@
+{
+  "name": "zen-readify-backend",
+  "version": "1.0.0",
+  "description": "Zen Readify Microservices Backend",
+  "scripts": {
+    "start": "concurrently \"npm run start:gateway\" \"npm run start:book\" \"npm run start:search\" \"npm run start:review\" \"npm run start:category\"",
+    "start:gateway": "cd api-gateway && npm start",
+    "start:book": "cd book-service && npm start",
+    "start:search": "cd search-service && npm start",
+    "start:review": "cd review-service && npm start",
+    "start:category": "cd category-service && npm start",
+    "install:all": "npm install && cd api-gateway && npm install && cd ../book-service && npm install && cd ../search-service && npm install && cd ../review-service && npm install && cd ../category-service && npm install"
+  },
+  "dependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
